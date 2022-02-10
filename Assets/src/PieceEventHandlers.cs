@@ -182,4 +182,65 @@ public class PieceEventHandlers : MonoBehaviour
             }
         }
     }
+
+    /// <summary>
+    ///  can move in 8 directions if all degrees of freedom are open
+    //+1 up and +2 left or +2 up and +1 left
+    //+1 up and +2 right or +2 up and +1 right
+    //-1 down and +2 right or -2 down and +1 right
+    //-1 down and +2 left or -2 down and +1 left
+    /// </summary>
+    /// <param name="newLocation"></param>
+    /// <param name="gameBoard"></param>
+    /// <param name="color"></param>
+    /// <param name="currentlocation"></param>
+    /// <param name="validMoves"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public static void KnightEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves)
+    {
+        
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="newLocation"></param>
+    /// <param name="gameBoard"></param>
+    /// <param name="color"></param>
+    /// <param name="currentlocation"></param>
+    /// <param name="validMoves"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public static void BishopEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// can move in any direction +1
+    /// </summary>
+    /// <param name="newLocation"></param>
+    /// <param name="gameBoard"></param>
+    /// <param name="color"></param>
+    /// <param name="currentlocation"></param>
+    /// <param name="validMoves"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public static void KingEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// can move in any direction until they hit an opponents piece
+    /// </summary>
+    /// <param name="newLocation"></param>
+    /// <param name="gameBoard"></param>
+    /// <param name="color"></param>
+    /// <param name="currentlocation"></param>
+    /// <param name="validMoves"></param>
+    /// <exception cref="NotImplementedException"></exception>
+    public static void QueenEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves)
+    {
+        throw new NotImplementedException();
+    }
 }

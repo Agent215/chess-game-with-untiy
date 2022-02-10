@@ -141,20 +141,16 @@ public class GamePiece : MonoBehaviour
                 PieceEventHandlers.RookEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
                 break;
             case Constants.KNIGHT:
-                // can move in 8 directions if all degrees of freedom are open
-                //+1 up and +2 left or +2 up and +1 left
-                //+1 up and +2 right or +2 up and +1 right
-                //-1 down and +2 right or -2 down and +1 right
-                //-1 down and +2 left or -2 down and +1 left
+                PieceEventHandlers.KnightEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
                 break;
             case Constants.BISHOP:
-                //can move diagnocally until they hit an oppenents piece
+                PieceEventHandlers.BishopEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
                 break;
             case Constants.KING:
-                //can move in any direction +1
+                PieceEventHandlers.KingEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
                 break;
             case Constants.QUEEN:
-                // can move in any direction until they hit an opponents piece
+                PieceEventHandlers.QueenEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
                 break;
             case null:
                 Debug.Log("piece name is invalid");
