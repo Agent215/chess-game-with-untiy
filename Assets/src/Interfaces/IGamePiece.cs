@@ -22,7 +22,7 @@ public interface IGamePiece
     public void setName(string pieceName);
     
 
-    public void MovePiece(Tuple<int, int> newPieceLocation, GameBoard gameBoard);
+    public void MovePiece(string newPieceLocation, GameBoard gameBoard);
 
 
     // public string ToString();

@@ -13,7 +13,7 @@ public class GameSquare : MonoBehaviour
 
     public Boolean hasPiece;
 
-    private GamePiece _gamePiece;
+    public GamePiece _gamePiece;
     
     public GameSquare() { }
 
@@ -59,13 +59,14 @@ public class GameSquare : MonoBehaviour
     }
 
 
-      public void setGamePiece(GamePiece gamePiece){
-        this._gamePiece = gamePiece;
-    }
+      public void setGamePiece(GamePiece gamePiece)
+      {
+          _gamePiece = gamePiece;
+      }
 
     public GamePiece getGamePiece()
     {
-        return this._gamePiece;
+        return _gamePiece;
     }
 
 }

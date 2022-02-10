@@ -1,4 +1,4 @@
-using System;
+using System; 
 using System.Collections;
 using System.Collections.Generic;
 using src;
@@ -6,19 +6,24 @@ using UnityEngine;
 
 public class testClass : MonoBehaviour
 {
+
+    public GameObject gameboard;
     // Start is called before the first frame update
     void Start()
     {
-        GameBoard board = new GameBoard();
+        GameBoard board = gameboard.GetComponent<GameBoard>();
         board.Initialize("defaultGame.txt");
-        GamePiece tempPiece = board.GetPiece(new Tuple<int, int>(1, 0));
-        tempPiece.MovePiece(new Tuple<int, int>(3, 0),board);
+        GamePiece pawn = board.GetPiece(new Tuple<int, int>(1, 0));
+        GamePiece rook = board.GetPiece(new Tuple<int, int>(0, 0));
+        pawn.MovePiece("H3",board);
+        pawn.MovePiece("H4",board);
+        pawn.MovePiece("H5",board);
+        Debug.Log(board.ToString());
+        rook.MovePiece("H4",board);
+        rook.MovePiece("A4",board);
+
         Debug.Log(board.ToString());
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

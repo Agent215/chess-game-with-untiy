@@ -2,21 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using src.Constants;
+using UnityEngine.Diagnostics;
 
-public class GamePiece : MonoBehaviour, IGamePiece
+public class GamePiece : MonoBehaviour
 {
-    private Tuple<int, int> _currentLocation;
-    private string _color = "";
-    private string _pieceName = "";
+    public Tuple<int, int> _currentLocation;
+    public string _color = "";
+    public string _pieceName = "";
     
     public GamePiece() { }
     public GamePiece(string color, string pieceName, Tuple<int, int> currentLocation)
     {
-        this._color = color;
-        this._pieceName = pieceName;
-        this._currentLocation = currentLocation;
+        _color = color;
+        _pieceName = pieceName;
+        _currentLocation = currentLocation;
     }
     public GamePiece GetGamePiece()
     {
@@ -25,24 +27,27 @@ public class GamePiece : MonoBehaviour, IGamePiece
 
     public void SetGamePiece(GamePiece gamePiece)
     {
+        _color = gamePiece._color;
+        _currentLocation = gamePiece._currentLocation;
+        _pieceName = gamePiece._pieceName;
 
     }
     
     public Tuple<int, int> getCurrentLocation()
     {
-        return this._currentLocation;
+        return _currentLocation;
     }
 
     public void setCurrentLocation(Tuple<int, int> currentLocation)
     {
 
-        this._currentLocation = currentLocation;
+        _currentLocation = currentLocation;
 
     }
 
     public string getColor()
     {
-        return this._color;
+        return _color;
     }
 
     public void setColor(string color)
@@ -50,18 +55,18 @@ public class GamePiece : MonoBehaviour, IGamePiece
         if (color != null
         && (color == Constants.BLACK || color == Constants.WHITE))
         {
-            this._color = color;
+            _color = color;
         }
     }
 
     public string getName()
     {
-        return this._pieceName;
+        return _pieceName;
     }
 
     public void setName(string pieceName)
     {
-        this._pieceName = pieceName;
+        _pieceName = pieceName;
     }
 
     /// <summary>
@@ -70,38 +75,48 @@ public class GamePiece : MonoBehaviour, IGamePiece
     /// Then move the piece and remove any captured pieces.
     /// </summary>
     /// <param name="pieceLocation"></param>
-    public void MovePiece(Tuple<int, int> newPieceLocation, GameBoard gameBoard)
+    public void MovePiece(string newPieceLocation, GameBoard gameBoard)
     {
+        Tuple<int,int> tupleLocation= new Tuple<int,int>(src.util.Utils.getLocationFromName(newPieceLocation,gameBoard).Item1,src.util.Utils.getLocationFromName(newPieceLocation,gameBoard).Item2);
         //if moveIsValid 
-        if (isMoveValid(newPieceLocation,gameBoard))
+        if (!tupleLocation.Equals(null))
         {
-            //if piece Location is occupied and of opposite color 
-            if (gameBoard.HasPiece(newPieceLocation))
+            if (isMoveValid(tupleLocation,gameBoard))
             {
-                //remove the opponents piece and set players piece to new location
-                gameBoard.RemovePiece(gameBoard.GetPiece(newPieceLocation));
-                Debug.Log("moving piece " + _pieceName +" to " + newPieceLocation);
-                //remove the piece from current location
-                gameBoard.RemovePieceByLocation(_currentLocation);
-                setCurrentLocation(newPieceLocation);
-                gameBoard.gameBoard[newPieceLocation.Item1,newPieceLocation.Item2].setHasPiece(true);
-                gameBoard.SetPiece(newPieceLocation,this);
+                //if piece Location is occupied and of opposite color 
+                if (gameBoard.HasPiece(tupleLocation))
+                {
+                    //remove the opponents piece and set players piece to new location
+                    gameBoard.RemovePiece(gameBoard.GetPiece(tupleLocation));
+                    Debug.Log("moving piece " + _pieceName +" to " + newPieceLocation);
+                    setPiece(tupleLocation, gameBoard);
+                }
+                else// if piece location is not occupied 
+                {
+                    Debug.Log("moving piece " + _pieceName +" to " + newPieceLocation);
+                    setPiece(tupleLocation,gameBoard);
+                }
+            }
+            else
+            {
+                //else log error
+                Debug.LogError("Move is invalid");
+            } 
+        }
+       
+    }
 
-            }
-            else// if piece location is not occupied 
-            {
-                Debug.Log("moving piece " + _pieceName +" to " + newPieceLocation);
-                gameBoard.RemovePieceByLocation(_currentLocation);
-                setCurrentLocation(newPieceLocation);
-                gameBoard.gameBoard[newPieceLocation.Item1,newPieceLocation.Item2].setHasPiece(true);
-                gameBoard.SetPiece(newPieceLocation,this);
-            }
-        }
-        else
-        {
-            //else log error
-            Debug.LogError("Move is invalid");
-        }
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="newPieceLocation"></param>
+    /// <param name="gameBoard"></param>
+    private void setPiece(Tuple<int, int> newPieceLocation, GameBoard gameBoard)
+    {
+        gameBoard.RemovePieceByLocation(_currentLocation);
+        setCurrentLocation(newPieceLocation);
+        gameBoard.gameBoard[newPieceLocation.Item1, newPieceLocation.Item2].GetComponent<GameSquare>().setHasPiece(true);
+        gameBoard.SetPiece(newPieceLocation, gameObject);
     }
 
     /// <summary>
@@ -114,49 +129,16 @@ public class GamePiece : MonoBehaviour, IGamePiece
     private bool isMoveValid(Tuple<int, int> newLocation,GameBoard gameBoard)
     {
         Tuple<int, int> currentlocation = getCurrentLocation();
-        bool isValid;
-        isValid = false;
+        var isValid = false;
         List<Tuple<int, int>> validMoves = new List<Tuple<int,int>>(); 
         string color = getColor();
         switch (getName())
         {
             case Constants.PAWN:
-                if (color == Constants.WHITE)
-                {
-                    //if pawn is on starting position it can move up +2 spaces
-                    if (currentlocation.Item1 == 1)
-                    {
-                        Tuple<int, int> move1 = new Tuple<int, int>(currentlocation.Item1 + 1, currentlocation.Item2);
-                        Tuple<int, int> move2 = new Tuple<int, int>(currentlocation.Item1 + 2, currentlocation.Item2);
-                        validMoves.Add(move1);
-                        validMoves.Add(move2);
-                    }
-                    else if(currentlocation.Item1 !=7) // we are not at the end of the board
-                    {
-                        //pawn can move +1 up if there is nothing in that spot
-                        if(!gameBoard.HasPiece(newLocation))
-                        { 
-                            Tuple<int, int> move1 = new Tuple<int, int>(currentlocation.Item1 + 1, currentlocation.Item2);
-                            validMoves.Add(move1);
-                        }
-                    }
-                    
-                }else if (color == Constants.BLACK)
-                {
-                    //if pawn is on starting position it can move up +2 spaces
-                    if (currentlocation.Item1 == 6)
-                    {
-                        Tuple<int, int> move1 = new Tuple<int, int>(currentlocation.Item1 + -1, currentlocation.Item2);
-                        Tuple<int, int> move2 = new Tuple<int, int>(currentlocation.Item1 + -2, currentlocation.Item2);
-                        validMoves.Add(move1);
-                        validMoves.Add(move2);
-                    }
-                }
-                //if a pawn is diaganaly adjacient to an opposing piece then they can move +1 up and +1 left or right
-                // if an opponents pawn has passed next to this pawn then current pawn get move +1 up and left or right behind that pawn to capture it
+                PieceEventHandlers.PawnEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
                 break;
             case Constants.ROOK:
-                // can move in straight line horizontaly and vertically until they hit opposing piece
+                PieceEventHandlers.RookEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
                 break;
             case Constants.KNIGHT:
                 // can move in 8 directions if all degrees of freedom are open
@@ -178,22 +160,10 @@ public class GamePiece : MonoBehaviour, IGamePiece
                 Debug.Log("piece name is invalid");
                 break;
         }
-
-        foreach (Tuple<int,int > move in validMoves)
+        foreach (var move in validMoves.Where(move => move.Equals(newLocation)))
         {
-            if (move.Equals(newLocation))
-            {
-                isValid = true;
-            } 
+            isValid = true;
         }
-        
         return isValid;
     }
-    
-    public static IGamePiece GamePieceFactory()
-    {
-
-        return new GamePiece();
-    }
-    
 }
