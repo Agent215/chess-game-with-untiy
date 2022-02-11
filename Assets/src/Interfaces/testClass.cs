@@ -15,6 +15,10 @@ public class testClass : MonoBehaviour
         board.Initialize("defaultGame.txt");
         GamePiece pawn = board.GetPiece(new Tuple<int, int>(1, 0));
         GamePiece rook = board.GetPiece(new Tuple<int, int>(0, 0));
+        GamePiece knight = board.GetPiece(new Tuple<int, int>(0, 1));
+
+        knight.MovePiece("F3",board);
+
         pawn.MovePiece("H3",board);
         pawn.MovePiece("H4",board);
         pawn.MovePiece("H5",board);

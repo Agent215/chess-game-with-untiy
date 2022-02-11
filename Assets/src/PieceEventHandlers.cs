@@ -198,8 +198,18 @@ public class PieceEventHandlers : MonoBehaviour
     /// <exception cref="NotImplementedException"></exception>
     public static void KnightEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves)
     {
-        
-        throw new NotImplementedException();
+        //if new location has piece and its your color move is not valid
+        if (!(gameBoard.HasPiece(newLocation) && gameBoard.GetPiece(newLocation).getColor().Equals(color)))
+        {
+            validMoves.Add( new Tuple<int, int>(currentlocation.Item1 + 1, currentlocation.Item2 +2));
+            validMoves.Add(new Tuple<int, int>(currentlocation.Item1 + 2, currentlocation.Item2 + 1));
+            validMoves.Add(new Tuple<int, int>(currentlocation.Item1 + 1, currentlocation.Item2 - 2));
+            validMoves.Add( new Tuple<int, int>(currentlocation.Item1 + 2, currentlocation.Item2 -1));
+            validMoves.Add(  new Tuple<int, int>(currentlocation.Item1 - 1, currentlocation.Item2 +2));
+            validMoves.Add( new Tuple<int, int>(currentlocation.Item1 - 2, currentlocation.Item2 +1));
+            validMoves.Add(  new Tuple<int, int>(currentlocation.Item1 - 1, currentlocation.Item2 -2));
+            validMoves.Add(  new Tuple<int, int>(currentlocation.Item1 - 2, currentlocation.Item2 -1));
+        }
     }
 
     /// <summary>
