@@ -1,6 +1,6 @@
 # chess-game-with-untiy
 
-##TODO
+## TODO
 - pawn en passant
 - Bishop event handler
 - King event handler
