@@ -1,5 +1,8 @@
 # chess-game-with-untiy
 
+This is a work in progress.
+feel free to create feature branches and raise pull requests.
+
 ## TODO
 - pawn en passant
 - Bishop event handler
