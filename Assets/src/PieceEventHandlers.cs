@@ -228,7 +228,49 @@ public class PieceEventHandlers : MonoBehaviour
     /// <exception cref="NotImplementedException"></exception>
     public static void BishopEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves)
     {
-        throw new NotImplementedException();
+     // Directions array represents the possible movement directions for the bishop
+    // Bishops move diagonally, so these directions cover all diagonal moves
+    int[] directions = { -1, 1 };
+
+    // Loop through all combinations of x and y directions
+    foreach (int xDirection in directions)
+    {
+        foreach (int yDirection in directions)
+        {
+            // Initialize the starting position
+            int x = currentlocation.Item1;
+            int y = currentlocation.Item2;
+
+            // Continue moving in the current direction until we hit an obstacle or go off the board
+            while (true)
+            {
+                // Move one step in the current direction
+                x += xDirection;
+                y += yDirection;
+
+                // Check if the new position is off the board
+                if (x < 0 || x >= 8 || y < 0 || y >= 8) // Assuming the board is 8x8
+                    break;
+
+                // Create a tuple for the new position
+                var move = new Tuple<int, int>(x, y);
+
+                // Check if the new position is occupied by a piece of the same color
+                if (gameBoard.HasPiece(newLocation) && gameBoard.GetPiece(newLocation).getColor() == color)
+                    break; // Stop moving in this direction
+
+                // Add the new position to the list of valid moves
+                validMoves.Add(move);
+
+                // If the new position is occupied by an opponent's piece, stop moving in this direction
+                if (gameBoard.HasPiece(newLocation) && gameBoard.GetPiece(newLocation).getColor() != color)
+                   {
+                    validMoves.Add(move);
+                    break;
+                   }
+            }
+        }
+    }
     }
 
     /// <summary>

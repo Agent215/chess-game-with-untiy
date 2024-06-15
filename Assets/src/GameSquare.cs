@@ -14,6 +14,8 @@ public class GameSquare : MonoBehaviour
     public Boolean hasPiece;
 
     public GamePiece _gamePiece;
+
+    public List<Tuple<int, int>> location;
     
     public GameSquare() { }
 
@@ -69,4 +71,14 @@ public class GameSquare : MonoBehaviour
         return _gamePiece;
     }
 
+// method to set the current location
+    public void setCurrentLocation(List<Tuple<int, int>> location)
+    {
+        this.location = location;
+    }
+    //method to get the current Location
+    public List<Tuple<int, int>> getCurrentLocation()
+    {
+        return location;
+    }
 }

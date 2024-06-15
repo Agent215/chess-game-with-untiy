@@ -51,6 +51,7 @@ public class GameBoard :MonoBehaviour
         { 
             gamePiece.transform.parent = gameBoard[PieceLocation.Item1,PieceLocation.Item2].transform;
             gameBoard[PieceLocation.Item1, PieceLocation.Item2].GetComponent<GameSquare>().setGamePiece(gamePiece.GetComponent<GamePiece>());
+            gameBoard[PieceLocation.Item1, PieceLocation.Item2].GetComponent<GameSquare>().setCurrentLocation(new List<Tuple<int, int>>() { new Tuple<int, int>(PieceLocation.Item1, PieceLocation.Item2) });
             gameBoard[PieceLocation.Item1, PieceLocation.Item2].GetComponent<GameSquare>().setHasPiece(true);
             gamePiece.transform.position = gameBoard[PieceLocation.Item1, PieceLocation.Item2].GetComponent<GameSquare>().GetComponent<BoxCollider>().center ;
 
