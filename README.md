@@ -5,7 +5,6 @@ feel free to create feature branches and raise pull requests.
 
 ## TODO
 - pawn en passant
-- King event handler
 - UI for moves
 - Victory conditions
 - Multiplayer
@@ -16,3 +15,4 @@ feel free to create feature branches and raise pull requests.
 - download assets by running ``` git lfs checkout```
 - install unity and open project
 - press play in unity
+- use the testClass.cs file to move the pieces for now. these methods should be hooked in to UI for easier usage.
