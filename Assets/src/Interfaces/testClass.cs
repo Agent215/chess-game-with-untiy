@@ -22,9 +22,14 @@ public class testClass : MonoBehaviour
         pawn.MovePiece("H3",board);
         pawn.MovePiece("H4",board);
         pawn.MovePiece("H5",board);
+        pawn.MovePiece("H6",board);
+        pawn.MovePiece("G7",board);
+
         Debug.Log(board.ToString());
         rook.MovePiece("H4",board);
         rook.MovePiece("A4",board);
+        rook.MovePiece("A7",board);
+
 
         Debug.Log(board.ToString());
     }

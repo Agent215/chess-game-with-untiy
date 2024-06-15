@@ -88,7 +88,7 @@ public class GamePiece : MonoBehaviour
                 {
                     //remove the opponents piece and set players piece to new location
                     gameBoard.RemovePiece(gameBoard.GetPiece(tupleLocation));
-                    Debug.Log("moving piece " + _pieceName +" to " + newPieceLocation);
+                    Debug.Log("moving piece with enemy present in target space!" + _pieceName +" to " + newPieceLocation);
                     setPiece(tupleLocation, gameBoard);
                 }
                 else// if piece location is not occupied 

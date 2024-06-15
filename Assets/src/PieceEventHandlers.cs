@@ -148,8 +148,11 @@ public class PieceEventHandlers : MonoBehaviour
                     //if a pawn is diagonally adjacent to an opposing piece then they can move +1 up and +1 left or right
                     Tuple<int, int> move1 = new Tuple<int, int>(currentlocation.Item1  +1, currentlocation.Item2 + 1);
                     Tuple<int, int> move2 = new Tuple<int, int>(currentlocation.Item1 + 1, currentlocation.Item2 - 1);
+                    validMoves.Add(move1);
+                    validMoves.Add(move2);
                     //TODO
                     // if an opponents pawn has passed next to this pawn then current pawn get move +1 up and left or right behind that pawn to capture it
+
                 }
             }
         }
@@ -176,6 +179,8 @@ public class PieceEventHandlers : MonoBehaviour
                     //if a pawn is diagonally adjacent to an opposing piece then they can move +1 up and +1 left or right
                     Tuple<int, int> move1 = new Tuple<int, int>(currentlocation.Item1 - 1, currentlocation.Item2 + 1);
                     Tuple<int, int> move2 = new Tuple<int, int>(currentlocation.Item1 - 1, currentlocation.Item2 - 1);
+                    validMoves.Add(move1);
+                    validMoves.Add(move2);
                     //TODO 
                     // if an opponents pawn has passed next to this pawn then current pawn get move +1 up and left or right behind that pawn to capture it
                 }

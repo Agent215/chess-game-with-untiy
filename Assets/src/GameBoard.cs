@@ -64,12 +64,17 @@ public class GameBoard :MonoBehaviour
             var w = gameBoard.GetLength(0); 
             var h = gameBoard.GetLength(1); 
 
+         Debug.Log("looking for piece" + gamePiece.getName()); 
             for (var x = 0; x < w; ++x)
             {
                 for (var y = 0; y < h; ++y)
                 {
-                    if (gameBoard[x, y].Equals(gamePiece))
+                    if (gameBoard[x, y].GetComponent<GameSquare>().getGamePiece() != null &&
+                        gameBoard[x, y].GetComponent<GameSquare>().getGamePiece().Equals(gamePiece))
                     {
+                        Debug.Log("removing piece " + gameBoard[x, y].GetComponent<GameSquare>().getGamePiece().getName()); 
+                        //for now just set this gameObject to inactive. maybe later we can do somthing else
+                        gameBoard[x, y].GetComponent<GameSquare>().getGamePiece().gameObject.SetActive(false);
                         gameBoard[x, y].GetComponent<GameSquare>().setGamePiece(null);
                         gameBoard[x,y].GetComponent<GameSquare>().setHasPiece(false);
                     }
