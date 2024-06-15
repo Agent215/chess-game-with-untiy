@@ -298,6 +298,8 @@ public class PieceEventHandlers : MonoBehaviour
     /// <exception cref="NotImplementedException"></exception>
     public static void QueenEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves)
     {
-        throw new NotImplementedException();
+        //queen is just the combination of rook and bishop
+        RookEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
+        BishopEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
     }
 }

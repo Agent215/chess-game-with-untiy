@@ -5,9 +5,7 @@ feel free to create feature branches and raise pull requests.
 
 ## TODO
 - pawn en passant
-- Bishop event handler
 - King event handler
-- Queen event handler
 - UI for moves
 - Victory conditions
 - Multiplayer
