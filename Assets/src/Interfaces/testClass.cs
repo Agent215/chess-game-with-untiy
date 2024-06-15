@@ -21,7 +21,7 @@ public class testClass : MonoBehaviour
         GamePiece knight = board.GetPiece(new Tuple<int, int>(0, 1));
         GamePiece bishop = board.GetPiece(new Tuple<int, int>(0, 2));
         GamePiece queen = board.GetPiece(new Tuple<int, int>(0, 4));
-
+        GamePiece king = board.GetPiece(new Tuple<int, int>(0, 3));
         pawn3.MovePiece("D4",board);
 
         knight.MovePiece("F3",board);
@@ -40,6 +40,10 @@ public class testClass : MonoBehaviour
         rook.MovePiece("A7",board);
         queen.MovePiece("D3",board);
         queen.MovePiece("A6",board);
+        king.MovePiece("D2",board);
+        king.MovePiece("D3",board);
+        king.MovePiece("D6",board); //invalid move
+        king.MovePiece("G6",board); //invalid move
 
 
 

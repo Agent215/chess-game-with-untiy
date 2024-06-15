@@ -273,19 +273,38 @@ public class PieceEventHandlers : MonoBehaviour
     }
     }
 
-    /// <summary>
-    /// can move in any direction +1
-    /// </summary>
-    /// <param name="newLocation"></param>
-    /// <param name="gameBoard"></param>
-    /// <param name="color"></param>
-    /// <param name="currentlocation"></param>
-    /// <param name="validMoves"></param>
-    /// <exception cref="NotImplementedException"></exception>
-    public static void KingEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves)
+     /// <summary>
+     /// can move in any direction +1
+     /// </summary>
+     /// <param name="newLocation"></param>
+     /// <param name="gameBoard"></param>
+     /// <param name="color"></param>
+     /// <param name="currentlocation"></param>
+     /// <param name="validMoves"></param>
+     /// <exception cref="NotImplementedException"></exception>
+     public static void KingEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves)
+     {
+        int[] directions = { -1, 0, 1 };
+
+    foreach (int xDirection in directions)
     {
-        throw new NotImplementedException();
-    }
+        foreach (int yDirection in directions)
+        {
+            if (xDirection == 0 && yDirection == 0)
+                continue;
+
+            int x = currentlocation.Item1 + xDirection;
+            int y = currentlocation.Item2 + yDirection;
+
+            if (x < 0 || x >= 8 || y < 0 || y >= 8) // Assuming the board is 8x8
+                continue;
+
+            var move = new Tuple<int, int>(x, y);
+                if (!gameBoard.HasPiece(move) || gameBoard.GetPiece(move).getColor() != color)
+                    validMoves.Add(move);
+            }
+        }
+     }
 
     /// <summary>
     /// can move in any direction until they hit an opponents piece
