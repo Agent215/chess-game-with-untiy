@@ -108,7 +108,7 @@ public class GameBoard :MonoBehaviour
         public void Initialize(String filename)
         {
             InitializeSquares();
-            string[] lines = System.IO.File.ReadAllLines(@"C:\Users\brahm\OneDrive\Documents\UnityStuff\My project\Assets\src\Config\defaultGame.txt");
+            string[] lines = System.IO.File.ReadAllLines(@".\Assets\src\Config\defaultGame.txt");
             foreach (string line in lines)
             {
                 //read lines in and split up words
