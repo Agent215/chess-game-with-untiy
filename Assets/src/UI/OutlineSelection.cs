@@ -70,8 +70,6 @@ public class OutlineSelection : MonoBehaviour
                 }
             }
         }
-
-    
     }
 
     private Transform FindSelectableChild(Transform parent)

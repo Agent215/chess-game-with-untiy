@@ -26,14 +26,12 @@ public class PieceEventHandlers : MonoBehaviour
         if (newLocation.Item2 == currentlocation.Item2)
         {
             moveDirection = "x";
-            Debug.Log("moving in the x direction");
             pathLength = Math.Abs(newLocation.Item1 - currentlocation.Item1);
         }
         //if moving on y axis
         if (newLocation.Item1== currentlocation.Item1)
         {
             moveDirection = "y";
-            Debug.Log("moving in the y direction");
             pathLength = Math.Abs(newLocation.Item2 - currentlocation.Item2);
         }
 
@@ -42,10 +40,9 @@ public class PieceEventHandlers : MonoBehaviour
         {
             for (int  i = 1; i <= pathLength; i++)
             {
-                Debug.Log("entering loop");
+                
                 if (!breakLoop)
-                {Debug.Log("still not valid");
-                    
+                {
                     if (moveDirection.Equals("y"))
                     {
                         Tuple<int, int> move;
@@ -65,12 +62,11 @@ public class PieceEventHandlers : MonoBehaviour
                         // if the piece is the same color as you then that spot is not valid
                         else if (gameBoard.GetPiece(newLocation).getColor().Equals(color))
                         {
-                            Debug.Log("invalid move piece on same team occupies square");
+                          
                         }
                         else// this is the opponents piece
                         {
                             breakLoop = true;
-                            Debug.Log("valid move for rook");
                             validMoves.Add(move);
                         }
                     }
@@ -87,18 +83,15 @@ public class PieceEventHandlers : MonoBehaviour
                         }
                         if (!gameBoard.HasPiece(move))
                         {
-                            Debug.Log("valid move for rook");
                             validMoves.Add(move);
                         }
                         // if the piece is the same color as you then that spot is not valid
                         else if (gameBoard.GetPiece(newLocation).getColor().Equals(color))
                         {
-                            Debug.Log("invalid move piece on same team occupies square");
                             breakLoop = true;
                         }
                         else// this is the opponents piece
                         {
-                            Debug.Log("valid move for rook");
                             validMoves.Add(move);
                             breakLoop = true;
                         }
@@ -301,7 +294,12 @@ public class PieceEventHandlers : MonoBehaviour
 
             var move = new Tuple<int, int>(x, y);
                 if (!gameBoard.HasPiece(move) || gameBoard.GetPiece(move).getColor() != color)
+                {
+                    //check for if the new square is threatened by an opposing piece, king cannot move to a square that will cause check
+                    if(!IsSquareThreatened(move, gameBoard, color))
                     validMoves.Add(move);
+
+                }
             }
         }
      }
@@ -321,4 +319,76 @@ public class PieceEventHandlers : MonoBehaviour
         RookEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
         BishopEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
     }
+
+    public static bool IsSquareThreatened(Tuple<int, int> square, GameBoard gameBoard, string kingColor)
+{
+    string opponentColor = (kingColor == "WHITE") ? "BLACK" : "WHITE";
+    Debug.Log("checking if square is threatened : " + square);
+    foreach (GamePiece piece in GetPiecesByColor(opponentColor, gameBoard))
+    {
+        List<Tuple<int, int>> opponentValidMoves = new List<Tuple<int, int>>();
+        opponentValidMoves = GetPieceAttackSquares(piece, gameBoard);
+        foreach (Tuple<int, int> move in opponentValidMoves)
+        {
+            if(move.Item1 == square.Item1 && move.Item2 == square.Item2)
+            {
+              Debug.Log("Square is threatened by " + piece.getColor() + " " + piece.getName() + " at " + piece.getCurrentLocation());
+              return true;
+            }
+        }
+   
+    }
+
+    return false;
+}
+
+private static List<Tuple<int, int>> GetPieceAttackSquares(GamePiece piece, GameBoard gameBoard)
+{
+    List<Tuple<int, int>> attackSquares = new List<Tuple<int, int>>();
+
+    if (piece.getName() == "PAWN")
+    {
+        int direction = piece.getColor() == "WHITE" ? 1 : -1; // White pawns move up, black pawns move down
+        Tuple<int, int> currentLocation = piece.getCurrentLocation();
+
+        // Pawns attack diagonally
+        Tuple<int, int> attackLeft = new Tuple<int, int>(currentLocation.Item1 + direction, currentLocation.Item2 - 1);
+        Tuple<int, int> attackRight = new Tuple<int, int>(currentLocation.Item1 + direction, currentLocation.Item2 + 1);
+
+        if (IsValidBoardPosition(attackLeft))
+        {
+            attackSquares.Add(attackLeft);
+        }
+
+        if (IsValidBoardPosition(attackRight))
+        {
+            attackSquares.Add(attackRight);
+        }
+    }
+    else
+    {
+        // For other pieces, use their valid moves as attack squares
+        piece.getValidMoves(gameBoard);
+    }
+
+    return attackSquares;
+}
+
+public static List<GamePiece> GetPiecesByColor(string color, GameBoard gameBoard)
+{
+    List<GamePiece> pieces = new List<GamePiece>();
+    Debug.Log("in GetPiecesByColor: " + color);
+    foreach (GamePiece piece in gameBoard.getGamePieces())
+    {
+        if (piece.getColor() == color)
+        {
+            pieces.Add(piece);
+        }
+    }
+    return pieces;
+}
+public static bool IsValidBoardPosition(Tuple<int, int> position)
+    {
+        return position.Item1 >= 0 && position.Item1 < 8 && position.Item2 >= 0 && position.Item2 < 8;
+}
 }

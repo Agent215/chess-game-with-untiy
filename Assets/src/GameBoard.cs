@@ -10,6 +10,7 @@ public class GameBoard :MonoBehaviour
         // 2d array or matrix of GamePiece
         //GameBoard
         public GameObject[,] gameBoard = new GameObject[8, 8];
+        public List<GamePiece> _gamePieces = new List<GamePiece>();
         public Material squareMaterial;
         public GameObject gameSquarePrefab;
         public GameObject gamePiecePrefab;
@@ -42,6 +43,7 @@ public class GameBoard :MonoBehaviour
             return gamePiece;
         }
 
+    
         /// <summary>
         /// set the piece at a given location
         /// </summary>
@@ -140,6 +142,7 @@ public class GameBoard :MonoBehaviour
                 if (color.Equals(Constants.BLACK))
                     pieceModel.transform.rotation = Quaternion.Euler(new Vector3(-90,180,0));
             }
+            setGamePieces();
             Debug.Log(ToString());
         }
 
@@ -214,7 +217,6 @@ public class GameBoard :MonoBehaviour
                     gameBoard[i, j] = cell;
                 }
             }
-
         }
 
         /// <summary>
@@ -253,6 +255,34 @@ public class GameBoard :MonoBehaviour
             }
             return board;
         }
+
+      //method set  array of all the GamePieces on the game board
+        public void setGamePieces()
+        {
+            Debug.Log("Setting the game pieces.....");
+            var w = gameBoard.GetLength(0); 
+            var h = gameBoard.GetLength(1); 
+        // for each sqaure in the board call GetPiece()
+        // if piece is not null add it to the list
+            for (var x = 0; x < w; ++x)
+            {
+                for (var y = 0; y < h; ++y)
+                {
+                    GamePiece gamePiece =  GetPiece(new Tuple<int, int>(x, y));
+                    if (gamePiece != null)
+                       { 
+                        this._gamePieces.Add(gamePiece);
+                       }
+                }}
+        }
+
+        //method to get all the GamePieces
+        public List<GamePiece> getGamePieces()
+        {
+            return this._gamePieces;
+        }
+
+
 
         /// <summary>
         /// loads the piece model and instantiate at origin

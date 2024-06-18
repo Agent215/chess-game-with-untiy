@@ -119,6 +119,32 @@ public class GamePiece : MonoBehaviour
         gameBoard.SetPiece(newPieceLocation, gameObject);
     }
 
+    //method to get all valid moves for a piece
+    public List<Tuple<int, int>> getValidMoves(GameBoard gameBoard)
+    {
+        List<Tuple<int, int>> validMoves = new List<Tuple<int, int>>();
+
+            var w = 8;
+            var h = 8;
+        // for each sqaure in the board call GetPiece()
+        // if piece is not null add it to the list
+            for (var x = 0; x < w; ++x)
+            {
+                for (var y = 0; y < h; ++y)
+                {
+                    if (isMoveValid(new Tuple<int, int>(x, y),gameBoard))
+                    {
+                        validMoves.Add(new Tuple<int, int>(x, y));
+                    }
+                }
+            }
+                  // if valid add to list of valid moves
+
+            return validMoves;
+        }
+  
+    
+
     /// <summary>
     /// isMoveValid checks current location with requested new location and check the piece type
     /// to decide all possible moves. this checks if the new move is valid
