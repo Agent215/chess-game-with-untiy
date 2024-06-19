@@ -5,14 +5,26 @@ using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using src.Constants;
-using UnityEngine.Diagnostics;
+// using UnityEngine.Diagnostics;
+using System.Threading;
+using System.IO;
+using System.Diagnostics;
+using Debug = UnityEngine.Debug;
+
+using System.Threading.Tasks;
 
 public class GamePiece : MonoBehaviour
 {
     public Tuple<int, int> _currentLocation;
     public string _color = "";
     public string _pieceName = "";
-    
+
+    public GameControl _gameControl;
+   void Start()
+    {
+        _gameControl = GameObject.Find("GameControl").GetComponent<GameControl>();
+        
+    }
     public GamePiece() { }
     public GamePiece(string color, string pieceName, Tuple<int, int> currentLocation)
     {
@@ -32,7 +44,7 @@ public class GamePiece : MonoBehaviour
         _pieceName = gamePiece._pieceName;
 
     }
-    
+
     public Tuple<int, int> getCurrentLocation()
     {
         return _currentLocation;
@@ -77,33 +89,35 @@ public class GamePiece : MonoBehaviour
     /// <param name="pieceLocation"></param>
     public void MovePiece(string newPieceLocation, GameBoard gameBoard)
     {
-        Tuple<int,int> tupleLocation= new Tuple<int,int>(src.util.Utils.getLocationFromName(newPieceLocation,gameBoard).Item1,src.util.Utils.getLocationFromName(newPieceLocation,gameBoard).Item2);
+        Tuple<int, int> tupleLocation = new Tuple<int, int>(src.util.Utils.getLocationFromName(newPieceLocation, gameBoard).Item1, src.util.Utils.getLocationFromName(newPieceLocation, gameBoard).Item2);
         //if moveIsValid 
         if (!tupleLocation.Equals(null))
         {
-            if (isMoveValid(tupleLocation,gameBoard))
+            if (isMoveValid(tupleLocation, gameBoard))
             {
                 //if piece Location is occupied and of opposite color 
                 if (gameBoard.HasPiece(tupleLocation))
                 {
                     //remove the opponents piece and set players piece to new location
                     gameBoard.RemovePiece(gameBoard.GetPiece(tupleLocation));
-                    Debug.Log("moving piece with enemy present in target space!" + _pieceName +" to " + newPieceLocation);
+                    Debug.Log("moving piece with enemy present in target space!" + _pieceName + " to " + newPieceLocation);
                     setPiece(tupleLocation, gameBoard);
+                    _gameControl.turnOver();
                 }
                 else// if piece location is not occupied 
                 {
-                    Debug.Log("moving piece " + _pieceName +" to " + newPieceLocation);
-                    setPiece(tupleLocation,gameBoard);
+                    Debug.Log("moving piece " + _pieceName + " to " + newPieceLocation);
+                    setPiece(tupleLocation, gameBoard);
+                     _gameControl.turnOver();
                 }
             }
             else
             {
                 //else log error
                 Debug.LogError("Move is invalid");
-            } 
+            }
         }
-       
+
     }
 
     /// <summary>
@@ -122,28 +136,33 @@ public class GamePiece : MonoBehaviour
     //method to get all valid moves for a piece
     public List<Tuple<int, int>> getValidMoves(GameBoard gameBoard)
     {
+        //lets do some timing to see how long it takes
+        Stopwatch stopwatch = new Stopwatch();
+        stopwatch.Start();
+
         List<Tuple<int, int>> validMoves = new List<Tuple<int, int>>();
 
-            var w = 8;
-            var h = 8;
+        var w = 8;
+        var h = 8;
         // for each sqaure in the board call GetPiece()
         // if piece is not null add it to the list
-            for (var x = 0; x < w; ++x)
+        for (var x = 0; x < w; ++x)
+        {
+            for (var y = 0; y < h; ++y)
             {
-                for (var y = 0; y < h; ++y)
+                if (isMoveValid(new Tuple<int, int>(x, y), gameBoard))
                 {
-                    if (isMoveValid(new Tuple<int, int>(x, y),gameBoard))
-                    {
-                        validMoves.Add(new Tuple<int, int>(x, y));
-                    }
+                    validMoves.Add(new Tuple<int, int>(x, y));
                 }
             }
-                  // if valid add to list of valid moves
-
-            return validMoves;
         }
-  
-    
+        // if valid add to list of valid moves
+        stopwatch.Stop();
+        Debug.Log("Time elapsed: " + stopwatch.ElapsedMilliseconds + " ms");
+        return validMoves;
+    }
+
+
 
     /// <summary>
     /// isMoveValid checks current location with requested new location and check the piece type
@@ -152,11 +171,11 @@ public class GamePiece : MonoBehaviour
     /// </summary>
     /// <param name="newLocation"></param>
     /// <returns>Boolean</returns>
-    private bool isMoveValid(Tuple<int, int> newLocation,GameBoard gameBoard)
+    private bool isMoveValid(Tuple<int, int> newLocation, GameBoard gameBoard)
     {
         Tuple<int, int> currentlocation = getCurrentLocation();
         var isValid = false;
-        List<Tuple<int, int>> validMoves = new List<Tuple<int,int>>(); 
+        List<Tuple<int, int>> validMoves = new List<Tuple<int, int>>();
         string color = getColor();
         switch (getName())
         {
