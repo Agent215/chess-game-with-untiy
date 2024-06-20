@@ -20,6 +20,7 @@ public class GameControl : MonoBehaviour
     public string _winner = "";
 
     public GameBoard _gameBoard;
+    public OutlineSelection _outlineSelection;
 
     // Start is called before the first frame update
     void Start()
@@ -27,6 +28,7 @@ public class GameControl : MonoBehaviour
         _gameBoard = GameObject.Find("pivot").GetComponent<GameBoard>();
         _gamePieces = _gameBoard.getGamePieces();
 
+        _outlineSelection = GameObject.Find("OutlineSelection").GetComponent<OutlineSelection>();
     }
 
     // Update is called once per frame
@@ -35,8 +37,18 @@ public class GameControl : MonoBehaviour
 
         if (_playerTurn == Constants.WHITE)
         {
-          
 
+            // if (_outlineSelection.selection != null)
+            // {
+            //     //check if the selection is a valid move
+            //     bool isSquare = _outlineSelection.selection.CompareTag("SelectableSqaure");
+            //     if (isSquare && _outlineSelection.previousSelection != null)
+            //     {
+            //         //this works but not really. we dont want to call this every frame. just when we click on a new square after already clicking our own piece
+            //         // _outlineSelection.previousSelection.parent.GetComponent<GamePiece>().MovePiece(_outlineSelection.selection.GetComponent<GameSquare>().getsquareName(), _gameBoard);
+            //     }
+
+            // }
             // when its my turn and a piece is selected,
             //find that piece that is selected in the array
             // then when i hover my mouse over another square we should check if its a valid move
@@ -48,41 +60,50 @@ public class GameControl : MonoBehaviour
             //then color the square red   
             //if the player then clicks on the invalid square
             //then do nothing and tell user its invalid move
-          
-            _playerTurn = Constants.BLACK;
+
         }
         else if (_playerTurn == Constants.BLACK)
         {
-      
-            _playerTurn = Constants.WHITE;
+
         }
     }
 
 
     // method to handle all the actions we only want to do once per turn
-    public void turnOver(){
- 
-            //get the king of the player whos turn is starting, which is the opposite of the current players turn
-             GamePiece king = _gamePieces.Find(x => x.getName() == Constants.KING && x.getColor() != _playerTurn);
+    public void turnOver()
+    {
+
+        //get the king of the player whos turn is starting, which is the opposite of the current players turn
+        GamePiece king = _gamePieces.Find(x => x.getName() == Constants.KING && x.getColor() != _playerTurn);
+        Debug.Log("game piece " + _gamePieces);
+        if (king == null)
+        {
+
+        }
+        else
+        {
+            // Debug.Log(king.ToString());
             // check if the players king has any valid moves
-            List<Tuple<int, int>> validMoves = king.getValidMoves(_gameBoard);
+            List<Tuple<int, int>> validMoves = king.getValidMoves(_gameBoard,true);
             // if the players king has no valid moves
-            if(validMoves.Count == 0)
+            bool isThreatened = PieceEventHandlers.IsSquareThreatened(king.getCurrentLocation(), _gameBoard,king.getColor());            
+            if (validMoves.Count == 0 && isThreatened)
             {
                 //then the player loses
                 //and the game is over 
                 _winner = _playerTurn;
                 _gameOver = true;
-            }  
+            }
 
             //update the player turn
-            if(_playerTurn == Constants.WHITE)
+            if (_playerTurn == Constants.WHITE)
             {
                 _playerTurn = Constants.BLACK;
             }
-            else if(_playerTurn == Constants.BLACK)
+            else if (_playerTurn == Constants.BLACK)
             {
                 _playerTurn = Constants.WHITE;
             }
+        }
     }
 }

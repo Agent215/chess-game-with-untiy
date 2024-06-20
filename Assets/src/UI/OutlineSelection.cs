@@ -5,14 +5,19 @@ using UnityEngine.EventSystems;
 
 public class OutlineSelection : MonoBehaviour
 {
-    private Transform highlight;
-    private Transform selection;
-    private RaycastHit raycastHit;
+    public Transform highlight;
+    public Transform selection;
 
-      private Transform highlight1;
-    private Transform selection1;
-    private RaycastHit raycastHit1;
+    public Transform previousSelection;
+    public RaycastHit raycastHit;
 
+    public GameBoard _gameBoard;
+
+        void Start()
+    {
+        _gameBoard = GameObject.Find("pivot").GetComponent<GameBoard>();
+
+    }
     void Update()
     {
         // Highlight
@@ -48,6 +53,8 @@ public class OutlineSelection : MonoBehaviour
             }
         }
 
+    
+
         // Selection
         if (Input.GetMouseButtonDown(0))
         {
@@ -57,9 +64,16 @@ public class OutlineSelection : MonoBehaviour
                 {
                     selection.gameObject.GetComponent<Outline>().enabled = false;
                 }
+                previousSelection = selection;
                 selection = highlight;
                 selection.gameObject.GetComponent<Outline>().enabled = true;
                 highlight = null;
+                //TODO handle piece movement
+                bool isSquare = selection.CompareTag("SelectableSqaure");
+                if (isSquare && previousSelection != null)
+                {
+                    previousSelection.parent.GetComponent<GamePiece>().MovePiece(selection.GetComponent<GameSquare>().getsquareName(), _gameBoard);
+                }
             }
             else
             {
@@ -75,10 +89,8 @@ public class OutlineSelection : MonoBehaviour
     private Transform FindSelectableChild(Transform parent)
     {
         // Check if the parent itself is selectable
-        if (parent.CompareTag("Selectable"))
-        {
-            return parent;
-        }
+        
+    
 
         // Recursively check child objects
         foreach (Transform child in parent)
@@ -90,6 +102,38 @@ public class OutlineSelection : MonoBehaviour
             }
         }
 
+            if (parent.CompareTag("Selectable"))
+        {
+            return parent;
+        }
+        if(parent.CompareTag("SelectableSqaure"))
+        {
+            return parent;
+        }
+
         return null;
     }
+
+
+    private Transform FindSelectableSquare(Transform parent)
+    {
+        // Check if the parent itself is selectable
+        if (parent.CompareTag("SelectableSqaure"))
+        {
+            return parent;
+        }
+
+        // Recursively check child objects
+        foreach (Transform child in parent)
+        {
+            Transform selectableChild = FindSelectableSquare(child);
+            if (selectableChild != null)
+            {
+                return selectableChild;
+            }
+        }
+
+        return null;
+    }
+    
 }

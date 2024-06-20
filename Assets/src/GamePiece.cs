@@ -93,7 +93,7 @@ public class GamePiece : MonoBehaviour
         //if moveIsValid 
         if (!tupleLocation.Equals(null))
         {
-            if (isMoveValid(tupleLocation, gameBoard))
+            if (isMoveValid(tupleLocation, gameBoard,false))
             {
                 //if piece Location is occupied and of opposite color 
                 if (gameBoard.HasPiece(tupleLocation))
@@ -134,7 +134,7 @@ public class GamePiece : MonoBehaviour
     }
 
     //method to get all valid moves for a piece
-    public List<Tuple<int, int>> getValidMoves(GameBoard gameBoard)
+    public List<Tuple<int, int>> getValidMoves(GameBoard gameBoard,bool isOpponent)
     {
         //lets do some timing to see how long it takes
         Stopwatch stopwatch = new Stopwatch();
@@ -150,7 +150,7 @@ public class GamePiece : MonoBehaviour
         {
             for (var y = 0; y < h; ++y)
             {
-                if (isMoveValid(new Tuple<int, int>(x, y), gameBoard))
+                if (isMoveValid(new Tuple<int, int>(x, y), gameBoard,isOpponent))
                 {
                     validMoves.Add(new Tuple<int, int>(x, y));
                 }
@@ -171,7 +171,7 @@ public class GamePiece : MonoBehaviour
     /// </summary>
     /// <param name="newLocation"></param>
     /// <returns>Boolean</returns>
-    private bool isMoveValid(Tuple<int, int> newLocation, GameBoard gameBoard)
+    private bool isMoveValid(Tuple<int, int> newLocation, GameBoard gameBoard,bool isOpponent)
     {
         Tuple<int, int> currentlocation = getCurrentLocation();
         var isValid = false;
@@ -192,7 +192,7 @@ public class GamePiece : MonoBehaviour
                 PieceEventHandlers.BishopEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
                 break;
             case Constants.KING:
-                PieceEventHandlers.KingEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);
+                PieceEventHandlers.KingEventHandler(newLocation, gameBoard, color, currentlocation, validMoves,isOpponent);
                 break;
             case Constants.QUEEN:
                 PieceEventHandlers.QueenEventHandler(newLocation, gameBoard, color, currentlocation, validMoves);

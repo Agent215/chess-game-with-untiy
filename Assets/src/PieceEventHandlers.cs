@@ -62,7 +62,7 @@ public class PieceEventHandlers : MonoBehaviour
                         // if the piece is the same color as you then that spot is not valid
                         else if (gameBoard.GetPiece(newLocation).getColor().Equals(color))
                         {
-
+                            breakLoop = true;
                         }
                         else// this is the opponents piece
                         {
@@ -275,7 +275,7 @@ public class PieceEventHandlers : MonoBehaviour
     /// <param name="currentlocation"></param>
     /// <param name="validMoves"></param>
     /// <exception cref="NotImplementedException"></exception>
-    public static void KingEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves)
+    public static void KingEventHandler(Tuple<int, int> newLocation, GameBoard gameBoard, string color, Tuple<int, int> currentlocation, List<Tuple<int, int>> validMoves,bool isOpponent)
     {
         int[] directions = { -1, 0, 1 };
 
@@ -296,7 +296,7 @@ public class PieceEventHandlers : MonoBehaviour
                 if (!gameBoard.HasPiece(move) || gameBoard.GetPiece(move).getColor() != color)
                 {
                     //check for if the new square is threatened by an opposing piece, king cannot move to a square that will cause check
-                    if (!IsSquareThreatened(move, gameBoard, color))
+                    if (!isOpponent && !IsSquareThreatened(move, gameBoard, color) )
                         validMoves.Add(move);
 
                 }
@@ -369,8 +369,9 @@ public class PieceEventHandlers : MonoBehaviour
         }
         else
         {
-            // For other pieces, use their valid moves as attack squares
-            piece.getValidMoves(gameBoard);
+       
+            // For other pieces, use their valid moves as attack squares, set as true because this is an attack
+            piece.getValidMoves(gameBoard,true);
         }
 
         return attackSquares;
