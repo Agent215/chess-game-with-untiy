@@ -9,6 +9,9 @@ feel free to create feature branches and raise pull requests.
 - Victory conditions
 - Multiplayer
 - play against AI
+- castling for king
+- pawns getting to end of board 
+
 
 ## Instructions to run
 - in project root directory install git lfs ```git lfs install```
