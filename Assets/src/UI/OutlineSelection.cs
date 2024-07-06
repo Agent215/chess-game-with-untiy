@@ -88,9 +88,6 @@ public class OutlineSelection : MonoBehaviour
 
     private Transform FindSelectableChild(Transform parent)
     {
-        // Check if the parent itself is selectable
-        
-    
 
         // Recursively check child objects
         foreach (Transform child in parent)

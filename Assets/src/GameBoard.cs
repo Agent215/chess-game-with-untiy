@@ -76,8 +76,9 @@ public class GameBoard : MonoBehaviour
                     gameBoard[x, y].GetComponent<GameSquare>().getGamePiece().Equals(gamePiece))
                 {
                     Debug.Log("removing piece " + gameBoard[x, y].GetComponent<GameSquare>().getGamePiece().getName());
-                    //for now just set this gameObject to inactive. maybe later we can do somthing else
-                    gameBoard[x, y].GetComponent<GameSquare>().getGamePiece().gameObject.SetActive(false);
+              
+                    Destroy(gameBoard[x, y].GetComponent<GameSquare>().getGamePiece().gameObject);
+
                     gameBoard[x, y].GetComponent<GameSquare>().setGamePiece(null);
                     gameBoard[x, y].GetComponent<GameSquare>().setHasPiece(false);
                 }
@@ -259,6 +260,7 @@ public class GameBoard : MonoBehaviour
     //method set  array of all the GamePieces on the game board
     public void setGamePieces()
     {
+        this._gamePieces.Clear();
         Debug.Log("Setting the game pieces.....");
         var w = gameBoard.GetLength(0);
         var h = gameBoard.GetLength(1);
@@ -280,6 +282,7 @@ public class GameBoard : MonoBehaviour
     //method to get all the GamePieces
     public List<GamePiece> getGamePieces()
     {
+        setGamePieces();
         return this._gamePieces;
     }
 

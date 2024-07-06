@@ -22,8 +22,8 @@ public class GameControl : MonoBehaviour
     public GameBoard _gameBoard;
     public OutlineSelection _outlineSelection;
 
-    // Start is called before the first frame update
-    void Start()
+    // Awake is called before the first frame update
+    void Awake()
     {
         _gameBoard = GameObject.Find("pivot").GetComponent<GameBoard>();
         _gamePieces = _gameBoard.getGamePieces();
@@ -69,23 +69,59 @@ public class GameControl : MonoBehaviour
     }
 
 
-    // method to handle all the actions we only want to do once per turn
+    // method to handle all the actions we only want to do once per turn. 
+    // this method should be called at the end of a turn.
     public void turnOver()
     {
 
+        //update the player turn
+        if (_playerTurn == Constants.WHITE)
+        {
+            _playerTurn = Constants.BLACK;
+        }
+        else if (_playerTurn == Constants.BLACK)
+        {
+            _playerTurn = Constants.WHITE;
+        }
+
+        List<GamePiece> whitePieces =  PieceEventHandlers.GetPiecesByColor(Constants.WHITE, _gameBoard);
+        List<GamePiece> blackPieces =  PieceEventHandlers.GetPiecesByColor(Constants.BLACK, _gameBoard);
+
+        if(_playerTurn == Constants.WHITE) {
+             foreach (GamePiece piece in whitePieces)
+             {
+                 piece.gameObject.transform.GetChild(0).gameObject.tag="Selectable";;
+           
+             }
+            foreach (GamePiece piece in blackPieces)
+             {
+                 piece.gameObject.transform.GetChild(0).gameObject.tag="UnSelectable";;
+             }
+        } 
+        else if( _playerTurn == Constants.BLACK) {
+             foreach (GamePiece piece in whitePieces)
+             {
+                piece.gameObject.transform.GetChild(0).gameObject.tag="UnSelectable";;
+             }
+            foreach (GamePiece piece in blackPieces)
+             {
+               piece.gameObject.transform.GetChild(0).gameObject.tag="Selectable";;
+             }
+        }
+
+        
+
         //get the king of the player whos turn is starting, which is the opposite of the current players turn
-        GamePiece king = _gamePieces.Find(x => x.getName() == Constants.KING && x.getColor() != _playerTurn);
-        Debug.Log("game piece " + _gamePieces);
+        GamePiece king = _gamePieces.Find(piece => piece.getName() == Constants.KING && piece.getColor() == _playerTurn);
         if (king == null)
         {
-
+           Debug.Log("king not found");
         }
         else
         {
-            // Debug.Log(king.ToString());
             // check if the players king has any valid moves
             List<Tuple<int, int>> validMoves = king.getValidMoves(_gameBoard,true);
-            // if the players king has no valid moves
+            // if the new players king has no valid moves
             bool isThreatened = PieceEventHandlers.IsSquareThreatened(king.getCurrentLocation(), _gameBoard,king.getColor());            
             if (validMoves.Count == 0 && isThreatened)
             {
@@ -95,15 +131,6 @@ public class GameControl : MonoBehaviour
                 _gameOver = true;
             }
 
-            //update the player turn
-            if (_playerTurn == Constants.WHITE)
-            {
-                _playerTurn = Constants.BLACK;
-            }
-            else if (_playerTurn == Constants.BLACK)
-            {
-                _playerTurn = Constants.WHITE;
-            }
         }
     }
 }
